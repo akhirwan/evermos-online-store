@@ -20,9 +20,10 @@ func NewItemService(itemRepository *repository.ItemRepository) ItemService {
 		ItemRepository: *itemRepository,
 	}
 }
+
 func (service *itemServiceImpl) Create(request model.SubmitItemRequest) (response model.SubmitItemResponse) {
 	request.Id = uuid.New().String()
-	validation.Validate(request)
+	validation.ItemValidate(request)
 
 	item := entity.Item{
 		Id:         request.Id,
@@ -91,7 +92,7 @@ func (service *itemServiceImpl) Detail(params ...string) (responses []model.GetI
 
 func (service *itemServiceImpl) Edit(request model.SubmitItemRequest, params ...string) (response model.SubmitItemResponse) {
 	request.Id = params[0]
-	validation.Validate(request)
+	validation.ItemValidate(request)
 	find := service.ItemRepository.Show(params[0])
 	if find[0].IsDeleted == true {
 		panic(exception.ValidationError{

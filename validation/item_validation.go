@@ -7,7 +7,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 
-func Validate(request model.SubmitItemRequest) {
+func ItemValidate(request model.SubmitItemRequest) {
 	err := validation.ValidateStruct(&request,
 		validation.Field(&request.Id, validation.Required),
 		validation.Field(&request.Name, validation.Required),

@@ -17,20 +17,24 @@ func main() {
 	database := config.NewMongoDatabase(configuration)
 
 	/*Setup Repository*/
-	productRepository := repository.NewItemRepository(database)
+	itemRepository := repository.NewItemRepository(database)
+	cartRepository := repository.NewCartRepository(database)
 
 	/*Setup Service*/
-	itemService := service.NewItemService(&productRepository)
+	itemService := service.NewItemService(&itemRepository)
+	cartService := service.NewCartService(&cartRepository, &itemRepository)
 
 	/*Setup Controller*/
-	productController := controller.NewItemController(&itemService)
+	itemController := controller.NewItemController(&itemService)
+	cartController := controller.NewCartController(&cartService)
 
 	/*Setup Fiber*/
 	app := fiber.New(config.NewFiberConfig())
 	app.Use(recover.New())
 
 	/*Setup Routing*/
-	productController.Route(app)
+	itemController.Route(app)
+	cartController.Route(app)
 
 	/*Start App*/
 	err := app.Listen(":3000")
