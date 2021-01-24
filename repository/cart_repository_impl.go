@@ -4,6 +4,7 @@ import (
 	"evermos-online-store/config"
 	"evermos-online-store/entity"
 	"evermos-online-store/exception"
+	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -24,7 +25,7 @@ func (repository *cartRepositoryImpl) FindAll(params ...string) (carts []entity.
 	defer cancel()
 
 	filters := bson.M{}
-	if params[0] == "" {
+	if params[0] != "" {
 		filters = bson.M{"user_email": params[0]}
 	}
 
@@ -41,7 +42,7 @@ func (repository *cartRepositoryImpl) FindAll(params ...string) (carts []entity.
 			UserEmail:   document["user_email"].(string),
 			CreatedAt:   document["created_at"].(int64),
 			ModifiedAt:  document["modified_at"].(int64),
-			DetailItems: document["detail_items"].([]interface{}),
+			DetailItems: document["detail_items"].([]entity.DetailItems),
 		})
 	}
 
@@ -51,8 +52,9 @@ func (repository *cartRepositoryImpl) FindAll(params ...string) (carts []entity.
 func (repository *cartRepositoryImpl) Show(params ...string) (carts []entity.Cart) {
 	ctx, cancel := config.NewMongoContext()
 	defer cancel()
+	log.Println(params[0])
 
-	cursor, err := repository.Collection.Find(ctx, bson.M{"_id": params[0]})
+	cursor, err := repository.Collection.Find(ctx, bson.M{"user_email": params[0]})
 	exception.PanicIfNeeded(err)
 
 	var documents []bson.M
@@ -65,7 +67,7 @@ func (repository *cartRepositoryImpl) Show(params ...string) (carts []entity.Car
 			UserEmail:   document["user_email"].(string),
 			CreatedAt:   document["created_at"].(int64),
 			ModifiedAt:  document["modified_at"].(int64),
-			DetailItems: document["detail_items"].([]interface{}),
+			DetailItems: document["detail_items"].([]entity.DetailItems),
 		})
 	}
 

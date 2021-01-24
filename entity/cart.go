@@ -5,7 +5,7 @@ type Cart struct {
 	UserEmail   string
 	CreatedAt   int64
 	ModifiedAt  int64
-	DetailItems []interface{} /*call item entity*/
+	DetailItems []DetailItems /*call item entity*/
 }
 
 type DetailItems struct {

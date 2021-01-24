@@ -1,5 +1,13 @@
 package model
 
+type GetCartResponse struct {
+	Id          string
+	UserEmail   string
+	CreatedAt   int64
+	ModifiedAt  int64
+	DetailItems interface{}
+}
+
 type CreateCartRequest struct {
 	Id      string `json:"id"`
 	ItemId  string `json:"item_id"`
